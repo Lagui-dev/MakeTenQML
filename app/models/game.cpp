@@ -3,7 +3,6 @@
 Game::Game(QObject *parent) : QObject(parent)
 {
     mDeck = new Deck(true);
-    //mTableOne = new Table();
     mPlayerOne = new Player("Robert");
     mStacks = QVector<Card *>(9,nullptr);
 
@@ -123,6 +122,21 @@ bool Game::areYouWin()
     }
 
     return win;
+}
+
+void Game::reStart()
+{
+    delete mDeck;
+    delete mPlayerOne;
+    mDeck = new Deck(true);
+    mPlayerOne = new Player("Robert");
+    mStacks = QVector<Card *>(9,nullptr);
+
+    for (int c = 0; c < mStacks.size(); c++) {
+        mStacks.replace(c, mDeck->drawBack());
+    }
+    mNumberOfCardSelected = 0;
+    mSumOfCard = 0;
 }
 
 

@@ -43,6 +43,7 @@ public:
     Q_INVOKABLE bool isPlayable(const int stackIdx);
     Q_INVOKABLE int size();
     Q_INVOKABLE bool areYouWin();
+    Q_INVOKABLE void reStart();
 
 private:
     Table  *mTableOne;

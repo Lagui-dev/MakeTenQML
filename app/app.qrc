@@ -59,7 +59,6 @@
         <file>images/cards/back_green.png</file>
         <file>images/cards/back_purple.png</file>
         <file>images/cards/back_yellow.png</file>
-        <file>images/cards/balck_red.png</file>
         <file>images/cards/honor_clubs.png</file>
         <file>images/cards/honor_diamond.png</file>
         <file>images/cards/honor_heart-14.png</file>
@@ -72,5 +71,7 @@
         <file>icons/cheat.svg</file>
         <file>views/main.qml</file>
         <file>views/util.js</file>
+        <file>images/cards/back_red.png</file>
+        <file>images/cards/back_table.png</file>
     </qresource>
 </RCC>

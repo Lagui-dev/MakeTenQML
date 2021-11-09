@@ -10,10 +10,11 @@ import "util.js" as Utildemo
 
 Window {
     id: root
-    width: 600
-    height: 800
+    width: 800
+    height: 600
     visible: true
     title: qsTr("Tens Solitaire - QML")
+
 
 
 //    header: ToolBar {
@@ -38,15 +39,81 @@ Window {
         anchors.fill: parent
 
     }
-    RowLayout {
-        id: rLayout
+    ColumnLayout {
+        id: cLayout
         anchors.fill: parent
-        Grid {
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            topPadding: 110
-            transformOrigin: Item.Center
-            Layout.leftMargin: 10
+
+        RowLayout {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumWidth: 100
+            Layout.preferredWidth: 150
+            Layout.minimumHeight: 32
+            Layout.preferredHeight: 50
             spacing: 10
+
+            Rectangle {
+                id: cardsLeft
+                height: 32
+                width: 125
+                color : '#08441e'
+                Text {
+                    id: cardLeftValue
+                    text: qsTr("YOU WIN!")
+                    font.pointSize: 20
+                    color: 'white'
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                }
+            }
+            Rectangle {
+                id: chrono
+                height: 32
+                width: 125
+                color : '#08441e'
+                Text {
+                    id : chronoValue
+                    text: qsTr("00:00:00")
+                    font.pointSize: 20
+                    color : 'white'
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+            }
+            Rectangle {
+                id: testCall
+                height: 32
+                width: 125
+                color : '#08441e'
+                Text {
+                    id : infoText
+                    text: "RESTART"
+                    font.pointSize: 20
+                    color : 'white'
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        myGame.reStart();
+                        for (let idx = 0; idx < 9; idx++) {
+                            nineCards.itemAt(idx).cardSelected = false;
+                            nineCards.itemAt(idx).imagePath = "";
+                            cardLeftValue.text = myGame.size();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        GridLayout {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+            Layout.minimumWidth: 300
+            Layout.preferredWidth: 600
+            Layout.leftMargin: 10
+            transformOrigin: Item.Center
             rows: 3
             columns: 3
             Repeater {
@@ -55,11 +122,15 @@ Window {
 
                 Rectangle {
                     property bool cardSelected: false
-                    property string imagePath: "" //"qrc" + myGame.getCard(index).imagePath();
+                    property string imagePath: ""
+                    width: 125
+                    height: 175
 
                     id: recCardSelected
-                    width: 132
-                    height: 195
+
+
+//                    width: 132
+//                    height: 195
                     radius: 5
                     border.width: 0
                     color: "forestgreen"
@@ -68,7 +139,7 @@ Window {
                         State {
                             name: "selected"
                             PropertyChanges { target: recCardSelected; color: "transparent" }
-                            PropertyChanges { target: recCardSelected; border.width: 4 }
+                            PropertyChanges { target: recCardSelected; border.width: 6 }
                             PropertyChanges { target: recCardSelected; border.color : "black" }
                         },
                         State {
@@ -81,7 +152,7 @@ Window {
                     state: cardSelected ? "selected" : "waiting";
 
                     Image {
-                        anchors.margins: 2
+                        anchors.margins: 3
                         anchors.fill: parent
                         source : imagePath
                         anchors.centerIn: parent
@@ -121,6 +192,8 @@ Window {
                                      if (myGame.draw(index)) {
                                          nineCards.itemAt(index).cardSelected = false;
                                          nineCards.itemAt(index).imagePath = "qrc" + myGame.getCard(index).imagePath();
+                                     } else {
+                                         nineCards.itemAt(index).imagePath = "";
                                      }
 
                                      break;
@@ -134,7 +207,7 @@ Window {
                                              if (myGame.draw(idxWin2)) {
                                                  nineCards.itemAt(idxWin2).imagePath = "qrc" + myGame.getCard(idxWin2).imagePath();
                                              } else {
-                                                 parent.visible = false;
+                                                 nineCards.itemAt(idxWin2).imagePath = "";
                                              }
                                          }
                                      }
@@ -142,7 +215,7 @@ Window {
                                          nineCards.itemAt(index).cardSelected = false;
                                          nineCards.itemAt(index).imagePath = "qrc" + myGame.getCard(index).imagePath();
                                      } else {
-                                         parent.visible = false;
+                                         nineCards.itemAt(index).imagePath = "";
                                      }
                                      break;
                                  }
@@ -155,7 +228,7 @@ Window {
                                              if (myGame.draw(idxWin3)) {
                                                  nineCards.itemAt(idxWin3).imagePath = "qrc" + myGame.getCard(idxWin3).imagePath();
                                              } else {
-                                                 parent.visible = false;
+                                                 nineCards.itemAt(idxWin3).imagePath = "";
                                              }
                                          }
                                      }
@@ -163,7 +236,7 @@ Window {
                                          nineCards.itemAt(index).cardSelected = false;
                                          nineCards.itemAt(index).imagePath = "qrc" + myGame.getCard(index).imagePath();
                                      } else {
-                                         parent.visible = false;
+                                         nineCards.itemAt(index).imagePath = "";
                                      }
                                      break;
                                  }
@@ -183,76 +256,11 @@ Window {
                              }
                          }
                     }
-//                    Rectangle {
-//                        id: recCardSelected
-//                        anchors.fill: parent
-//                        radius: 5
-//                        border.color: "deepskyblue"
-//                        border.width: 4
-//                        color: "transparent"
-//                        visible: nineCards.itemAt(index).cardSelected;
-//                    }
-
-//                    Rectangle {
-//                        id: recCardPlayable
-//                        anchors.fill: parent
-//                        radius: 5
-//                        border.color: "darkgreen"
-//                        border.width: 4
-//                        color: "forestgreen"
-//                        visible: true;
-//                    }
                 }
 
-            }
-        }
-        Column {
-            Layout.minimumWidth: 150
-            topPadding: 110
-            Layout.alignment: Qt.AlignRight
-            Layout.preferredHeight: parent.height
-            spacing: 10
-            Rectangle {
-                id: cardsLeft
-                width: parent.width
-                height: 32
-                color : '#08441e'
-                Text {
-                    id: cardLeftValue
-                    text: qsTr("YOU WIN!")
-                    font.pointSize: 20
-                    color: 'white'
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                }
-            }
-            Rectangle {
-                id: chrono
-                width: parent.width
-                height: 32
-                color : '#08441e'
-                Text {
-                    id : chronoValue
-                    text: qsTr("00:00:00")
-                    font.pointSize: 20
-                    color : 'white'
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-            }
-            Rectangle {
-                id: testCall
-                width: parent.width
-                height: 32
-                color : '#08441e'
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        Utildemo.testJSCall("testJSCall")
-                        nineCards.itemAt(0).cardSelected = !nineCards.itemAt(0).cardSelected;
-                        //console.info(nineCards.itemAt(0).)
-                    }
-                }
             }
         }
     }
 }
+
+

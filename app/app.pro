@@ -3,6 +3,7 @@ include (models/models.pri)
 
 QT       += quick qml
 
+
 TEMPLATE = app
 #TARGET   = $$IDE_APP_TARGET
 DESTDIR  = $$IDE_APP_PATH
