@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+    app.setApplicationName("Make Ten");
 
     qmlRegisterType<Game>("MakeTen.Game", 1, 0, "Game");
     qmlRegisterType<Card>("MakeTen.Card", 1, 0, "Card");

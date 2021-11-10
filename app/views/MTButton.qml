@@ -3,7 +3,7 @@ import QtQuick 2.15
 Rectangle {
 
     property string text: ""
-    property int pointSize: 16
+    property int pointSize: 18
 
     height: 40
     width: 125

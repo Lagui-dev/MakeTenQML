@@ -76,5 +76,7 @@
         <file>views/MTButton.qml</file>
         <file>icons/logo_128x128.png</file>
         <file>icons/logo_512x512.png</file>
+        <file>icons/logo_128x128.ico</file>
+        <file>images/card_selected.png</file>
     </qresource>
 </RCC>

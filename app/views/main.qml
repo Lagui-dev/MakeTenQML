@@ -1,6 +1,5 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtQuick.Layouts 1.15
 
 import MakeTen.Game 1.0
 import MakeTen.GameStatus 1.0
@@ -10,6 +9,7 @@ import "util.js" as Utildemo
 
 Window {
     property real dp: mainWindow.height / 832
+    property int chrono: 0
     id: mainWindow
     width: 411
     height: 832
@@ -19,6 +19,14 @@ Window {
         id: myGame;
     }
 
+    Timer {
+        id: timerChrono
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: { btnChrono.text = new Date(0,0,0,0,0,chrono += 1).toLocaleTimeString(Qt.locale(), "hh:mm:ss"); }
+    }
+
     Image {
         id: imgbackground
         source: "qrc:/images/background_table.png"
@@ -26,7 +34,6 @@ Window {
         horizontalAlignment: Image.AlignLeft
         verticalAlignment: Image.AlignTop
         anchors.fill: parent
-
     }
 
     Column {
@@ -34,38 +41,43 @@ Window {
         anchors.fill: parent
         topPadding: 9 * dp
         leftPadding: 9 * dp
+        spacing: 9 * dp
+
         Row {
             spacing: 9 * dp
 
             MTButton {
-                id: cardsLeft
+                id: btnCardsLeft
                 width: 125 * dp
-                pointSize: 16 * dp
+                pointSize: 18 * dp
                 text: qsTr("52")
             }
 
             MTButton {
-                id: chronoValue
+                id: btnChrono
                 width: 125 * dp
-                pointSize: 16 * dp
-                //text: qsTr("00:00:00")
-                text: Number(dp).toLocaleString();
+                pointSize: 18 * dp
+                text: qsTr("00:00:00")
             }
 
             MTButton {
-                id: startButton
+                id: btnStart
                 width: 125 * dp
-                pointSize: 16 * dp
+                pointSize: 18 * dp
                 text: qsTr("RESTART")
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
+                        timerChrono.stop();
+                        chrono = 0;
+                        btnChrono.text = qsTr("00:00:00")
                         myGame.reStart();
                         for (let idx = 0; idx < 9; idx++) {
                             nineCards.itemAt(idx).cardSelected = false;
                             nineCards.itemAt(idx).imagePath = "qrc:/images/cards/back_table.png";
-                            cardsLeft.text = myGame.size();
+                            btnCardsLeft.text = myGame.size();
                         }
+                        timerChrono.start();
                     }
                 }
             }
@@ -76,6 +88,8 @@ Window {
             spacing: 9 * dp
             rows: 3
             columns: 3
+            id: gridCards
+
             Repeater {
                 id: nineCards
                 model: 9
@@ -87,7 +101,6 @@ Window {
                     width: 125 * dp
                     height: 191 * dp
 
-
                     radius: 6
                     border.width: 0
                     border.color : "#36e073"
@@ -96,21 +109,22 @@ Window {
                     states: [
                         State {
                             name: "selected"
-                            PropertyChanges { target: recCardSelected; border.width: 6 }
+                            PropertyChanges { target: recCardSelected; border.width: 0 }
+                            PropertyChanges { target: imgSelected; visible: true }
                         },
                         State {
                             name: "waiting"
                             PropertyChanges { target: recCardSelected; border.width: 0 }
+                            PropertyChanges { target: imgSelected; visible: false }
                         }
                     ]
 
                     state: cardSelected ? "selected" : "waiting";
 
                     Image {
-                        source : imagePath
+                        source : parent.imagePath
                         anchors.margins: 3
                         anchors.fill: parent
-
 
                         MouseArea {
                              anchors.fill: parent
@@ -203,16 +217,40 @@ Window {
 
                                  if (myGame.areYouWin()) {
                                      console.info("You win");
-                                     cardsLeft.text = "YOU WIN!";
+                                     btnCardsLeft.text = "YOU WIN!";
+                                     timerChrono.stop();
+                                     txtBestTime.text = "Best time : " + btnChrono.text;
                                  } else {
-                                     cardsLeft.text = myGame.size();
+                                     btnCardsLeft.text = myGame.size();
                                  }
 
                              }
                          }
                     }
-                }
 
+                    Image {
+                        id : imgSelected
+                        source: "qrc:/images/card_selected.png"
+                        width: 63 * dp
+                        height: 57 * dp
+                        anchors.bottom: parent.bottom
+                        visible: false
+
+                    }
+                }
+            }
+        }
+        Rectangle {
+            width: gridCards.width
+            height: 50
+            color: "black"
+            opacity: 0.5
+            Text {
+                id: txtBestTime
+                anchors.centerIn: parent
+                color: "white"
+                font.pointSize: 16
+                text:  "Best time : 23:59:59"
             }
         }
     }

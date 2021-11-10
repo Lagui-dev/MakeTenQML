@@ -11,8 +11,6 @@ include(MakeTenQML.pri)
 }
 
 
-QT_SCALE_FACTOR=2
-
 TEMPLATE  = subdirs
 CONFIG   += ordered
 
