@@ -73,5 +73,8 @@
         <file>views/util.js</file>
         <file>images/cards/back_red.png</file>
         <file>images/cards/back_table.png</file>
+        <file>views/MTButton.qml</file>
+        <file>icons/logo_128x128.png</file>
+        <file>icons/logo_512x512.png</file>
     </qresource>
 </RCC>

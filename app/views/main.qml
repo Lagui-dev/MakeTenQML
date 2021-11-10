@@ -1,31 +1,20 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.12
 
 import MakeTen.Game 1.0
 import MakeTen.GameStatus 1.0
 import MakeTen.Card 1.0
+
 import "util.js" as Utildemo
 
 Window {
-    id: root
-    width: 800
-    height: 600
+    property real dp: mainWindow.height / 832
+    id: mainWindow
+    width: 411
+    height: 832
     visible: true
-    title: qsTr("Tens Solitaire - QML")
 
-
-
-//    header: ToolBar {
-//        ToolButton {
-
-//        }
-//    }
-//    footer: Text {
-//        text: "Tens Solitaire QML v0.1.00.beta1 - MIT Licence - 2021 - Lagui-dev"
-
-//    }
     Game {
         id: myGame;
     }
@@ -39,66 +28,43 @@ Window {
         anchors.fill: parent
 
     }
-    ColumnLayout {
+
+    Column {
         id: cLayout
         anchors.fill: parent
+        topPadding: 9 * dp
+        leftPadding: 9 * dp
+        Row {
+            spacing: 9 * dp
 
-        RowLayout {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.minimumWidth: 100
-            Layout.preferredWidth: 150
-            Layout.minimumHeight: 32
-            Layout.preferredHeight: 50
-            spacing: 10
-
-            Rectangle {
+            MTButton {
                 id: cardsLeft
-                height: 32
-                width: 125
-                color : '#08441e'
-                Text {
-                    id: cardLeftValue
-                    text: qsTr("YOU WIN!")
-                    font.pointSize: 20
-                    color: 'white'
-                    anchors.horizontalCenter: parent.horizontalCenter
+                width: 125 * dp
+                pointSize: 16 * dp
+                text: qsTr("52")
+            }
 
-                }
+            MTButton {
+                id: chronoValue
+                width: 125 * dp
+                pointSize: 16 * dp
+                //text: qsTr("00:00:00")
+                text: Number(dp).toLocaleString();
             }
-            Rectangle {
-                id: chrono
-                height: 32
-                width: 125
-                color : '#08441e'
-                Text {
-                    id : chronoValue
-                    text: qsTr("00:00:00")
-                    font.pointSize: 20
-                    color : 'white'
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-            }
-            Rectangle {
-                id: testCall
-                height: 32
-                width: 125
-                color : '#08441e'
-                Text {
-                    id : infoText
-                    text: "RESTART"
-                    font.pointSize: 20
-                    color : 'white'
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+
+            MTButton {
+                id: startButton
+                width: 125 * dp
+                pointSize: 16 * dp
+                text: qsTr("RESTART")
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
                         myGame.reStart();
                         for (let idx = 0; idx < 9; idx++) {
                             nineCards.itemAt(idx).cardSelected = false;
-                            nineCards.itemAt(idx).imagePath = "";
-                            cardLeftValue.text = myGame.size();
+                            nineCards.itemAt(idx).imagePath = "qrc:/images/cards/back_table.png";
+                            cardsLeft.text = myGame.size();
                         }
                     }
                 }
@@ -106,14 +72,8 @@ Window {
         }
 
 
-        GridLayout {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.minimumWidth: 300
-            Layout.preferredWidth: 600
-            Layout.leftMargin: 10
-            transformOrigin: Item.Center
+        Grid {
+            spacing: 9 * dp
             rows: 3
             columns: 3
             Repeater {
@@ -121,30 +81,25 @@ Window {
                 model: 9
 
                 Rectangle {
-                    property bool cardSelected: false
-                    property string imagePath: ""
-                    width: 125
-                    height: 175
-
                     id: recCardSelected
+                    property bool cardSelected: false
+                    property string imagePath: "qrc:/images/cards/back_table.png"
+                    width: 125 * dp
+                    height: 191 * dp
 
 
-//                    width: 132
-//                    height: 195
-                    radius: 5
+                    radius: 6
                     border.width: 0
-                    color: "forestgreen"
+                    border.color : "#36e073"
+                    color: "transparent"
 
                     states: [
                         State {
                             name: "selected"
-                            PropertyChanges { target: recCardSelected; color: "transparent" }
                             PropertyChanges { target: recCardSelected; border.width: 6 }
-                            PropertyChanges { target: recCardSelected; border.color : "black" }
                         },
                         State {
                             name: "waiting"
-                            PropertyChanges { target: recCardSelected; color: "#1f9d4c" }
                             PropertyChanges { target: recCardSelected; border.width: 0 }
                         }
                     ]
@@ -152,10 +107,10 @@ Window {
                     state: cardSelected ? "selected" : "waiting";
 
                     Image {
+                        source : imagePath
                         anchors.margins: 3
                         anchors.fill: parent
-                        source : imagePath
-                        anchors.centerIn: parent
+
 
                         MouseArea {
                              anchors.fill: parent
@@ -248,9 +203,9 @@ Window {
 
                                  if (myGame.areYouWin()) {
                                      console.info("You win");
-                                     cardLeftValue.text = "YOU WIN!";
+                                     cardsLeft.text = "YOU WIN!";
                                  } else {
-                                     cardLeftValue.text = myGame.size();
+                                     cardsLeft.text = myGame.size();
                                  }
 
                              }

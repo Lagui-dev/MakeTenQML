@@ -14,12 +14,13 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/views/main.qml"));
     qmlRegisterType<Game>("MakeTen.Game", 1, 0, "Game");
     qmlRegisterType<Card>("MakeTen.Card", 1, 0, "Card");
     qRegisterMetaType<GameState>("GameState");
     qmlRegisterUncreatableType<GameStatusClass>("MakeTen.GameStatus", 1, 0, "GameState", "");
+
+    QQmlApplicationEngine engine;
+    const QUrl url(QStringLiteral("qrc:/views/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
