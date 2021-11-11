@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
-    app.setApplicationName("Make Ten");
+    app.setApplicationName("Tens Solitaire");
 
     qmlRegisterType<Game>("MakeTen.Game", 1, 0, "Game");
     qmlRegisterType<Card>("MakeTen.Card", 1, 0, "Card");
@@ -28,6 +28,5 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
-
     return app.exec();
 }

@@ -1,19 +1,24 @@
-import QtQuick 2.15
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
-Rectangle {
-
-    property string text: ""
-    property int pointSize: 18
-
-    height: 40
-    width: 125
-    radius: 4
-    color : '#08441e'
-    Text {
-        text: parent.text
-        font.pointSize: parent.pointSize
-        color: 'white'
-        anchors.centerIn: parent
-
+Button {
+    id: button
+    implicitWidth: 100
+    implicitHeight: 40
+    font.pointSize:  18
+    background: Rectangle {
+        radius: 4
+        opacity: enabled ? 1 : 0.3
+        border.color: button.down ? "#17a81a" : "#21be2b"
+        border.width: 1
+    }
+    contentItem: Text {
+        text: button.text
+        font: button.font
+        opacity: enabled ? 1.0 : 0.3
+        color: button.down ? "#17a81a" : "#21be2b"
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
     }
 }

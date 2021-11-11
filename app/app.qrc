@@ -73,10 +73,15 @@
         <file>views/util.js</file>
         <file>images/cards/back_red.png</file>
         <file>images/cards/back_table.png</file>
-        <file>views/MTButton.qml</file>
+        <file>views/MTLabel.qml</file>
         <file>icons/logo_128x128.png</file>
         <file>icons/logo_512x512.png</file>
         <file>icons/logo_128x128.ico</file>
         <file>images/card_selected.png</file>
+        <file>views/Splash.qml</file>
+        <file>images/logo.png</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>views/MTButton.qml</file>
+        <file>images/youwin.png</file>
     </qresource>
 </RCC>

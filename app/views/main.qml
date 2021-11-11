@@ -1,5 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick.Controls 2.12
 
 import MakeTen.Game 1.0
 import MakeTen.GameStatus 1.0
@@ -10,10 +11,16 @@ import "util.js" as Utildemo
 Window {
     property real dp: mainWindow.height / 832
     property int chrono: 0
+    property int played: 0
+
+    property var splashWindow: Splash {
+       onTimeout: mainWindow.visible = true
+    }
+
     id: mainWindow
     width: 411
     height: 832
-    visible: true
+    visible: false
 
     Game {
         id: myGame;
@@ -36,6 +43,7 @@ Window {
         anchors.fill: parent
     }
 
+
     Column {
         id: cLayout
         anchors.fill: parent
@@ -46,14 +54,14 @@ Window {
         Row {
             spacing: 9 * dp
 
-            MTButton {
+            MTLabel {
                 id: btnCardsLeft
                 width: 125 * dp
                 pointSize: 18 * dp
                 text: qsTr("52")
             }
 
-            MTButton {
+            MTLabel {
                 id: btnChrono
                 width: 125 * dp
                 pointSize: 18 * dp
@@ -61,24 +69,24 @@ Window {
             }
 
             MTButton {
-                id: btnStart
-                width: 125 * dp
-                pointSize: 18 * dp
                 text: qsTr("RESTART")
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timerChrono.stop();
-                        chrono = 0;
-                        btnChrono.text = qsTr("00:00:00")
-                        myGame.reStart();
-                        for (let idx = 0; idx < 9; idx++) {
-                            nineCards.itemAt(idx).cardSelected = false;
-                            nineCards.itemAt(idx).imagePath = "qrc:/images/cards/back_table.png";
-                            btnCardsLeft.text = myGame.size();
-                        }
-                        timerChrono.start();
+                font.pointSize: 18 * dp
+                width: 125 * dp
+                height: 40
+                onClicked: {
+                    timerChrono.stop();
+                    chrono = 0;
+                    played++;
+                    btnChrono.text = qsTr("00:00:00")
+                    myGame.reStart();
+                    for (let idx = 0; idx < 9; idx++) {
+                        nineCards.itemAt(idx).cardSelected = false;
+                        nineCards.itemAt(idx).imagePath = "qrc:/images/cards/back_table.png";
+                        btnCardsLeft.text = myGame.size();
                     }
+                    youWin.visible = false;
+                    //youWin.pos = 0;
+                    timerChrono.start();
                 }
             }
         }
@@ -123,7 +131,7 @@ Window {
 
                     Image {
                         source : parent.imagePath
-                        anchors.margins: 3
+                        anchors.margins: 4
                         anchors.fill: parent
 
                         MouseArea {
@@ -217,9 +225,11 @@ Window {
 
                                  if (myGame.areYouWin()) {
                                      console.info("You win");
-                                     btnCardsLeft.text = "YOU WIN!";
                                      timerChrono.stop();
                                      txtBestTime.text = "Best time : " + btnChrono.text;
+                                     youWin.visible = true;
+                                     youWin.pos = 0;
+
                                  } else {
                                      btnCardsLeft.text = myGame.size();
                                  }
@@ -232,7 +242,7 @@ Window {
                         id : imgSelected
                         source: "qrc:/images/card_selected.png"
                         width: 63 * dp
-                        height: 57 * dp
+                        height: 55 * dp
                         anchors.bottom: parent.bottom
                         visible: false
 
@@ -242,15 +252,52 @@ Window {
         }
         Rectangle {
             width: gridCards.width
-            height: 50
+            height: 25
             color: "black"
             opacity: 0.5
             Text {
                 id: txtBestTime
                 anchors.centerIn: parent
                 color: "white"
-                font.pointSize: 16
+                font.pointSize: 16 * dp
                 text:  "Best time : 23:59:59"
+            }
+        }
+        Rectangle {
+            width: gridCards.width
+            height: 25
+            color: "black"
+            opacity: 0.5
+            Text {
+                id: txtCounter
+                anchors.centerIn: parent
+                color: "white"
+                font.pointSize: 16 * dp
+                text:  "Played : " + played
+            }
+        }
+    }
+    Rectangle {
+        property int pos: 400
+        id: youWin
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: pos
+        visible: false
+        width: 223 * dp
+        height: 190 * dp
+        color: "transparent"
+        Image {
+            anchors.fill: parent
+            source: "qrc:/images/youwin.png"
+        }
+
+        Behavior on pos {
+            NumberAnimation {
+                id: animation
+                from: 0
+                to: mainWindow.height /2
+                duration: 1000
+                easing.type : Easing.InOutBack
             }
         }
     }
