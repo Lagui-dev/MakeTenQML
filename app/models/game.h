@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QTimer>
+#include <QTime>
 
 #include "models/deck.h"
 #include "models/card.h"
@@ -45,16 +47,27 @@ public:
     Q_INVOKABLE bool areYouWin();
     Q_INVOKABLE void reStart();
 
+
+    Q_INVOKABLE int counter() const;
+
 private:
     Table  *mTableOne;
     Deck   *mDeck;
     Player *mPlayerOne;
-    QVector<Card *> mStacks;
+    QVector<Card *> mStacks; // The nine cards on the table
+    int    mLastSackIdx;
     int    mSumOfCard;
     int    mNumberOfCardSelected;
+    int    mCounter;
 
+    QTimer mChrono;
+    QTime  mChronoHMS;
 
+private slots:
+    void   chronoAdd1sec();
 
+signals:
+    void   chronoUpdated(QString chronoHMS);
 };
 
 #endif // GAME_H

@@ -11,6 +11,13 @@ Game::Game(QObject *parent) : QObject(parent)
     }
     mNumberOfCardSelected = 0;
     mSumOfCard = 0;
+    mLastSackIdx = -1;
+    mCounter = 0;
+
+    connect(&mChrono, &QTimer::timeout, this, &Game::chronoAdd1sec);
+    mChronoHMS = QTime(0,0,0,0);
+    mChrono.setInterval(1000);
+
 }
 
 Card *Game::getCard(const int stackIdx)
@@ -19,8 +26,25 @@ Card *Game::getCard(const int stackIdx)
 }
 
 
+/**
+ * @brief Checks the rules of the game
+ * @param stackIdx
+ * @return GameState
+ */
 GameState Game::check(const int stackIdx)
 {
+   if (!mChrono.isActive()) {
+       mChrono.start();
+   }
+
+   // card played is the same
+   if (mLastSackIdx == stackIdx) {
+       mSumOfCard = 0;
+       mNumberOfCardSelected = 0;
+       mLastSackIdx = -1;
+       return GameState::CANCEL;
+   }
+
     // backgrounded card
     if (!isPlayable(stackIdx)) {
         return GameState::NOTHING;
@@ -29,12 +53,14 @@ GameState Game::check(const int stackIdx)
     auto sumOfCardBefore = mSumOfCard;
     mSumOfCard += mStacks.at(stackIdx)->point();
     mNumberOfCardSelected++;
+    mLastSackIdx = stackIdx;
 
     switch (mNumberOfCardSelected) {
     case 1:
         if (mStacks.at(stackIdx)->value() == Value::TEN) {
             mSumOfCard = 0;
             mNumberOfCardSelected = 0;
+            mLastSackIdx = -1;
             return GameState::WINNING1CARD;
         }
         return GameState::WAITING;
@@ -44,6 +70,7 @@ GameState Game::check(const int stackIdx)
         case 10:
             mSumOfCard = 0;
             mNumberOfCardSelected = 0;
+            mLastSackIdx = -1;
             return GameState::WINNING2CARDS;
             break;
         case 23 ... 25:
@@ -56,6 +83,7 @@ GameState Game::check(const int stackIdx)
                     || mStacks.at(stackIdx)->value() == 10) {
                 mSumOfCard = 0;
                 mNumberOfCardSelected = 0;
+                mLastSackIdx = -1;
                 return GameState::CANCEL;
             } else {
                 return GameState::WAITING;
@@ -64,6 +92,7 @@ GameState Game::check(const int stackIdx)
         default:
             mSumOfCard = 0;
             mNumberOfCardSelected = 0;
+            mLastSackIdx = -1;
             return GameState::CANCEL;
             break;
         }
@@ -73,10 +102,12 @@ GameState Game::check(const int stackIdx)
         if (mSumOfCard == 36) {
             mSumOfCard = 0;
             mNumberOfCardSelected = 0;
+            mLastSackIdx = -1;
             return GameState::WINNING3CARDS;
         } else {
             mSumOfCard = 0;
             mNumberOfCardSelected = 0;
+            mLastSackIdx = -1;
             return GameState::CANCEL;
         }
         break;
@@ -120,7 +151,9 @@ bool Game::areYouWin()
             win = false;
         }
     }
-
+    if (win) {
+        mChrono.stop();
+    }
     return win;
 }
 
@@ -137,6 +170,20 @@ void Game::reStart()
     }
     mNumberOfCardSelected = 0;
     mSumOfCard = 0;
+    mChrono.stop();
+    mChronoHMS = QTime(0,0,0,0);
+    mCounter++;
+}
+
+int Game::counter() const
+{
+    return mCounter;
+}
+
+void Game::chronoAdd1sec()
+{
+    mChronoHMS = mChronoHMS.addSecs(1);
+    emit chronoUpdated(mChronoHMS.toString("hh:mm:ss"));
 }
 
 

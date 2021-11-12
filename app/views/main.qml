@@ -10,8 +10,6 @@ import "util.js" as Utildemo
 
 Window {
     property real dp: mainWindow.height / 832
-    property int chrono: 0
-    property int played: 0
 
     property var splashWindow: Splash {
        onTimeout: mainWindow.visible = true
@@ -24,14 +22,9 @@ Window {
 
     Game {
         id: myGame;
-    }
-
-    Timer {
-        id: timerChrono
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: { btnChrono.text = new Date(0,0,0,0,0,chrono += 1).toLocaleTimeString(Qt.locale(), "hh:mm:ss"); }
+        onChronoUpdated: {
+            btnChrono.text = chronoHMS;
+        }
     }
 
     Image {
@@ -74,19 +67,16 @@ Window {
                 width: 125 * dp
                 height: 40
                 onClicked: {
-                    timerChrono.stop();
-                    chrono = 0;
-                    played++;
-                    btnChrono.text = qsTr("00:00:00")
+                    enabled = false;
                     myGame.reStart();
+                    txtCounter.text = "Played : " + myGame.counter()
                     for (let idx = 0; idx < 9; idx++) {
                         nineCards.itemAt(idx).cardSelected = false;
                         nineCards.itemAt(idx).imagePath = "qrc:/images/cards/back_table.png";
                         btnCardsLeft.text = myGame.size();
                     }
                     youWin.visible = false;
-                    //youWin.pos = 0;
-                    timerChrono.start();
+                    enabled = true;
                 }
             }
         }
@@ -225,7 +215,6 @@ Window {
 
                                  if (myGame.areYouWin()) {
                                      console.info("You win");
-                                     timerChrono.stop();
                                      txtBestTime.text = "Best time : " + btnChrono.text;
                                      youWin.visible = true;
                                      youWin.pos = 0;
@@ -252,7 +241,7 @@ Window {
         }
         Rectangle {
             width: gridCards.width
-            height: 25
+            height: 28
             color: "black"
             opacity: 0.5
             Text {
@@ -265,7 +254,7 @@ Window {
         }
         Rectangle {
             width: gridCards.width
-            height: 25
+            height: 28
             color: "black"
             opacity: 0.5
             Text {
@@ -273,10 +262,12 @@ Window {
                 anchors.centerIn: parent
                 color: "white"
                 font.pointSize: 16 * dp
-                text:  "Played : " + played
+                text:  "Played : " + myGame.counter()
             }
         }
     }
+
+
     Rectangle {
         property int pos: 400
         id: youWin
