@@ -3,22 +3,17 @@ import QtQuick.Window 2.12
 
 Window {
     id: splash
-    color: "#08441e"
+    color: "transparent"
     title: "Tens Solitaire"
     modality: Qt.ApplicationModal
     flags: Qt.SplashScreen
     property int timeoutInterval: 2000
     signal timeout
-    width: 411
-    height: 832
-
-    Text {
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "Open Source Project - LAGUI-DEV 2021"
-        color: "white"
-        font.pointSize: 16
-    }
+    //visible: false
+    x: (Screen.width - splashImage.width) / 2
+    y: (Screen.height - splashImage.height) / 2
+    width: splashImage.width
+    height: splashImage.height
 
     Image {
         id: splashImage
@@ -37,5 +32,10 @@ Window {
             splash.timeout()
         }
     }
-    Component.onCompleted: visible = true
+
+    Component.onCompleted: {
+        if (Qt.platform.os != "android") {
+            visible = true
+        }
+    }
 }

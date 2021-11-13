@@ -9,7 +9,9 @@ import MakeTen.Card 1.0
 import "util.js" as Utildemo
 
 Window {
+
     property real dp: mainWindow.height / 832
+
 
     property var splashWindow: Splash {
        onTimeout: mainWindow.visible = true
@@ -24,6 +26,7 @@ Window {
         id: myGame;
         onChronoUpdated: {
             btnChrono.text = chronoHMS;
+            console.info(cLayout.width);
         }
     }
 
@@ -39,7 +42,7 @@ Window {
 
     Column {
         id: cLayout
-        anchors.fill: parent
+        anchors.horizontalCenter: parent.horizontalCenter
         topPadding: 9 * dp
         leftPadding: 9 * dp
         spacing: 9 * dp
@@ -265,33 +268,36 @@ Window {
                 text:  "Played : " + myGame.counter()
             }
         }
-    }
 
 
-    Rectangle {
-        property int pos: 400
-        id: youWin
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: pos
-        visible: false
-        width: 223 * dp
-        height: 190 * dp
-        color: "transparent"
-        Image {
-            anchors.fill: parent
-            source: "qrc:/images/youwin.png"
-        }
+        Rectangle {
+            property int pos: 400
+            id: youWin
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: pos
+            visible: false
+            width: 223 * dp
+            height: 190 * dp
+            color: "transparent"
+            Image {
+                anchors.fill: parent
+                source: "qrc:/images/youwin.png"
+            }
 
-        Behavior on pos {
-            NumberAnimation {
-                id: animation
-                from: 0
-                to: mainWindow.height /2
-                duration: 1000
-                easing.type : Easing.InOutBack
+            Behavior on pos {
+                NumberAnimation {
+                    id: animation
+                    from: 0
+                    to: mainWindow.height /2
+                    duration: 1000
+                    easing.type : Easing.InOutBack
+                }
             }
         }
     }
+
+
+
 }
 
 

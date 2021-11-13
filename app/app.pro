@@ -5,7 +5,9 @@ QT       += quick qml
 
 
 TEMPLATE = app
-#TARGET   = $$IDE_APP_TARGET
+win32 {
+	TARGET   = $$IDE_APP_TARGET
+}
 DESTDIR  = $$IDE_APP_PATH
 VERSION  = $$APP_VERSION
 
