@@ -11,9 +11,6 @@ win32 {
 DESTDIR  = $$IDE_APP_PATH
 VERSION  = $$APP_VERSION
 
-QMAKE_LFLAGS+= "-s TOTAL_MEMORY=22151168"
-QMAKE_LFLAGS+= "-s ERROR_ON_UNDEFINED_SYMBOLS=0"
-
 SOURCES += \
     main.cpp \
     maketenglobal.cpp
