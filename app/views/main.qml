@@ -1,6 +1,6 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.15
 
 import MakeTen.Game 1.0
 import MakeTen.GameStatus 1.0
@@ -44,7 +44,6 @@ Window {
         id: cLayout
         anchors.horizontalCenter: parent.horizontalCenter
         topPadding: 9 * dp
-        leftPadding: 9 * dp
         spacing: 9 * dp
 
         Row {
