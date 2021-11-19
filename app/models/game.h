@@ -5,6 +5,7 @@
 #include <QQmlEngine>
 #include <QTimer>
 #include <QTime>
+#include <QDebug>
 
 #include "models/deck.h"
 #include "models/card.h"
@@ -50,6 +51,8 @@ public:
 
     Q_INVOKABLE int counter() const;
 
+    Q_INVOKABLE const QString bestChrono() const;
+
 private:
     Table  *mTableOne;
     Deck   *mDeck;
@@ -62,6 +65,7 @@ private:
 
     QTimer mChrono;
     QTime  mChronoHMS;
+    QTime  mBestChrono;
 
 private slots:
     void   chronoAdd1sec();

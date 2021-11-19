@@ -26,7 +26,6 @@ Window {
         id: myGame;
         onChronoUpdated: {
             btnChrono.text = chronoHMS;
-            console.info(cLayout.width);
         }
     }
 
@@ -217,7 +216,7 @@ Window {
 
                                  if (myGame.areYouWin()) {
                                      console.info("You win");
-                                     txtBestTime.text = "Best time : " + btnChrono.text;
+                                     txtBestTime.text = "Best time : " + myGame.bestChrono();
                                      youWin.visible = true;
                                      youWin.pos = 0;
 
@@ -251,7 +250,7 @@ Window {
                 anchors.centerIn: parent
                 color: "white"
                 font.pointSize: 16 * dp
-                text:  "Best time : 23:59:59"
+                text:  "Best time : " + myGame.bestChrono();
             }
         }
         Rectangle {

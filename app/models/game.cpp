@@ -17,6 +17,7 @@ Game::Game(QObject *parent) : QObject(parent)
     connect(&mChrono, &QTimer::timeout, this, &Game::chronoAdd1sec);
     mChronoHMS = QTime(0,0,0,0);
     mChrono.setInterval(1000);
+    mBestChrono = QTime(23,59,59);
 
 }
 
@@ -147,12 +148,17 @@ bool Game::areYouWin()
     bool win = true;
     QVector<Card *>::iterator it;
     for (it = mStacks.begin(); it != mStacks.end(); ++it) {
-        if (((*it) != nullptr) && (*it)->value() < Value::VALUE_END) {
-            win = false;
+        if ((*it) != nullptr) {
+            if ((*it)->value() < Value::VALUE_END) {
+                win = false;
+            }
         }
     }
     if (win) {
         mChrono.stop();
+        if (mBestChrono.msecsTo(mChronoHMS) < 0) {
+            mBestChrono = mChronoHMS;
+        }
     }
     return win;
 }
@@ -169,6 +175,7 @@ void Game::reStart()
         mStacks.replace(c, mDeck->drawBack());
     }
     mNumberOfCardSelected = 0;
+    mLastSackIdx = -1;
     mSumOfCard = 0;
     mChrono.stop();
     mChronoHMS = QTime(0,0,0,0);
@@ -178,6 +185,11 @@ void Game::reStart()
 int Game::counter() const
 {
     return mCounter;
+}
+
+const QString Game::bestChrono() const
+{
+    return mBestChrono.toString("hh:mm:ss");
 }
 
 void Game::chronoAdd1sec()
